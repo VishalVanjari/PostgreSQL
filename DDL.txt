@@ -1,0 +1,129 @@
+// Data Defination Language (DDL)
+
+1. Create 
+
+create db postgreys;
+
+/c postgreys;
+
+postgres=# create table cars(brand varchar (255),model varchar (255),year int);
+CREATE TABLE
+postgres=# show cars
+postgres-# show cars;
+ERROR:  syntax error at or near "show"
+LINE 2: show cars;
+        ^
+postgres=# select * from cars;
+ brand | model | year
+-------+-------+------
+(0 rows)
+
+
+postgres=# insert into cars(brand,model,year) values("Ford","Mustange",1964);
+ERROR:  column "Ford" does not exist
+LINE 1: insert into cars(brand,model,year) values("Ford","Mustange",...
+                                                  ^
+postgres=# insert into cars(brand,model,year) values('Ford','Mustange',1964);
+INSERT 0 1
+postgres=# select * from cars;
+ brand |  model   | year
+-------+----------+------
+ Ford  | Mustange | 1964
+(1 row)
+
+			
+postgres=# insert into cars (brand,model,year)
+postgres-# values ('Volvo','P1800',1693),
+postgres-# ('BMW','M1',1956),
+postgres-# ('TATA','Nano',2010);
+INSERT 0 3
+postgres=# select * from cars;
+ brand |  model   | year
+-------+----------+------
+ Ford  | Mustange | 1964
+ Volvo | P1800    | 1693
+ BMW   | M1       | 1956
+ TATA  | Nano     | 2010
+(4 rows)
+
+
+2. alter
+
+a) Add column
+
+postgres=# alter table cars add color varchar(255);
+ALTER TABLE
+postgres=# select * from cars;
+ brand |  model   | year | color
+-------+----------+------+-------
+ Ford  | Mustange | 1964 |
+ Volvo | P1800    | 1693 |
+ BMW   | M1       | 1956 |
+ TATA  | Nano     | 2010 |
+(4 rows)
+
+
+b) drop column
+
+postgres=# alter table cars drop column color;
+ALTER TABLE
+postgres=# select * from cars;
+ brand |  model   | year
+-------+----------+------
+ Ford  | Mustange | 1964
+ Volvo | P1800    | 1693
+ BMW   | M1       | 1956
+ TATA  | Nano     | 2010
+(4 rows)
+
+c) alter column
+
+postgres=# alter table cars alter column year type varchar(4);
+ALTER TABLE
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+--------
+ Ford  | Mustange | 1964 | 25     | Red
+ BMW   | M1       | 1956 | 18     | White
+ Volvo | P1800    | 1693 | 15     | Blue
+ TATA  | Nano     | 2010 | 21     | Yellow
+(4 rows)
+
+
+3. Drop
+
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+--------
+ Ford  | Mustange | 1964 | 25     | Red
+ BMW   | M1       | 1956 | 18     | White
+ Volvo | P1800    | 1693 | 15     | Blue
+ TATA  | Nano     | 2010 | 21     | Yellow
+(4 rows)
+
+postgres=# drop table cars;
+DROP TABLE
+postgres=# select * from cars;
+ERROR:  relation "cars" does not exist
+LINE 1: select * from cars;
+
+
+4. Truncate
+
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+--------
+ Ford  | Mustange | 1964 | 25     | Red
+ BMW   | M1       | 1956 | 18     | White
+ Volvo | P1800    | 1693 | 15     | Blue
+ TATA  | Nano     | 2010 | 21     | Yellow
+(4 rows)
+
+postgres=# truncate table cars;
+TRUNCATE TABLE
+postgres=# select * from cars;
+ brand | model | year
+-------+-------+------
+(0 rows)
+
+
