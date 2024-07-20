@@ -1,0 +1,67 @@
+//Data Query language (DQL)
+
+1. Select
+
+
+postgres=# select * from cars;
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(3 rows)
+
+
+postgres=# select * from cars;
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(3 rows)
+
+
+postgres=# select brand,year from cars;
+ brand | year
+-------+------
+ Volvo | 1693
+ BMW   | 1956
+ TATA  | 2010
+(3 rows)
+
+
+postgres=# select brand,model from cars;
+ brand | model
+-------+-------
+ Volvo | P1800
+ BMW   | M1
+ TATA  | Nano
+(3 rows)
+
+
+postgres=# select brand from cars;
+ brand
+-------
+ Volvo
+ BMW
+ TATA
+(3 rows)
+
+
+postgres=# select model,year from cars;
+ model | year
+-------+------
+ P1800 | 1693
+ M1    | 1956
+ Nano  | 2010
+(3 rows)
+
+
+
+
+
+
+
+
+
+
