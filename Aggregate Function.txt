@@ -1,0 +1,81 @@
+// 1.MIN Functions
+
+postgres=# select min(age) from person;
+ min
+-----
+  16
+(1 row)
+
+postgres=# select min(name) from person;
+     min
+--------------
+ Abdul Pathan
+(1 row)
+
+
+//2.MAX function
+
+postgres=# select max(age) from person;
+ max
+-----
+  65
+(1 row)
+
+postgres=# select max(name) from person;
+      max
+----------------
+ Vishal Vanjari
+(1 row)
+
+//3. Count
+
+postgres=# select * from person;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(4 rows)
+
+postgres=# select count (name) from person;
+ count
+-------
+     4
+(1 row)
+
+
+postgres=# select count (name) from person where country = 'India';
+ count
+-------
+     2
+(1 row)
+
+postgres=# select count(country) from person where age >18;
+ count
+-------
+     3
+(1 row)
+
+
+//4. Sum
+
+postgres=# select sum(age) from person;
+ sum
+-----
+ 138
+(1 row)
+
+//5. Avg
+
+postgres=# select avg(age) from person;
+         avg
+---------------------
+ 34.5000000000000000
+(1 row)
+
+postgres=# select avg(age) ::numeric(10,2) from person;
+  avg
+-------
+ 34.50
+(1 row)
