@@ -1,0 +1,115 @@
+// Data Manipulation Language (DML)
+
+1. Insert
+
+postgres=# insert into cars(brand,model,year) values('Ford','Mustange',1964);
+INSERT 0 1
+postgres=# select * from cars;
+ brand |  model   | year
+-------+----------+------
+ Ford  | Mustange | 1964
+(1 row)
+
+
+postgres=# insert into cars (brand,model,year)
+postgres-# values ('Volvo','P1800',1693),
+postgres-# ('BMW','M1',1956),
+postgres-# ('TATA','Nano',2010);
+INSERT 0 3
+postgres=# select * from cars;
+ brand |  model   | year
+-------+----------+------
+ Ford  | Mustange | 1964
+ Volvo | P1800    | 1693
+ BMW   | M1       | 1956
+ TATA  | Nano     | 2010
+(4 rows)
+
+
+
+2. Update 
+
+
+postgres=# alter table cars add color varchar(255);
+ALTER TABLE
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+-------
+ Ford  | Mustange | 1964 |        |
+ Volvo | P1800    | 1693 |        |
+ BMW   | M1       | 1956 |        |
+ TATA  | Nano     | 2010 |        |
+(4 rows)
+
+
+postgres=# update cars set milage=25,color='Red' where brand = 'Ford';
+UPDATE 1
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+-------
+ Volvo | P1800    | 1693 |        |
+ BMW   | M1       | 1956 |        |
+ TATA  | Nano     | 2010 |        |
+ Ford  | Mustange | 1964 | 25     | Red
+(4 rows)
+
+
+postgres=# update cars set milage = 18, color = 'White' where brand = 'BMW';
+UPDATE 1
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+-------
+ Volvo | P1800    | 1693 |        |
+ TATA  | Nano     | 2010 |        |
+ Ford  | Mustange | 1964 | 25     | Red
+ BMW   | M1       | 1956 | 18     | White
+(4 rows)
+
+
+postgres=# update cars set milage = 15, color = 'Blue' where brand = 'Volvo';
+UPDATE 1
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+-------
+ TATA  | Nano     | 2010 |        |
+ Ford  | Mustange | 1964 | 25     | Red
+ BMW   | M1       | 1956 | 18     | White
+ Volvo | P1800    | 1693 | 15     | Blue
+(4 rows)
+
+
+postgres=# update cars set milage = 21, color = 'Yellow' where brand = 'TATA';
+UPDATE 1
+postgres=# select * from cars;
+ brand |  model   | year | milage | color
+-------+----------+------+--------+--------
+ Ford  | Mustange | 1964 | 25     | Red
+ BMW   | M1       | 1956 | 18     | White
+ Volvo | P1800    | 1693 | 15     | Blue
+ TATA  | Nano     | 2010 | 21     | Yellow
+(4 rows)
+
+
+3. Delete
+
+
+postgres=# delete  from cars where color = 'Red';
+DELETE 1
+postgres=# select * from cars;
+ brand | model | year | milage | color
+-------+-------+------+--------+--------
+ BMW   | M1    | 1956 | 18     | White
+ Volvo | P1800 | 1693 | 15     | Blue
+ TATA  | Nano  | 2010 | 21     | Yellow
+(3 rows)
+
+
+postgres=# delete from cars;
+DELETE 3
+postgres=# select * from cars;
+ brand | model | year | milage | color
+-------+-------+------+--------+-------
+(0 rows)
+
+
+
