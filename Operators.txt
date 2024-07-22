@@ -1,0 +1,138 @@
+// Operators
+
+
+postgres=# select * from cars;
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(3 rows)
+
+
+postgres=# select * from cars where brand = 'Volvo';
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+(1 row)
+
+
+postgres=# select * from cars where year > 1990;
+ brand | model | year
+-------+-------+------
+ TATA  | Nano  | 2010
+(1 row)
+
+
+postgres=# select * from cars where year < 1990;
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+(2 rows)
+
+
+postgres=# select * from cars where year <= 1956;
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+(2 rows)
+
+
+postgres=# select * from cars where year >= 1956;
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(2 rows)
+
+
+postgres=# select * from cars where brand <> 'Volvo';
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(2 rows)
+
+
+postgres=# select * from cars where brand != 'Volvo';
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(2 rows)
+
+
+postgres=# select * from cars where model like 'M%';
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+(1 row)
+
+
+postgres=# select * from cars where model ilike 'm%';
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+(1 row)
+
+
+postgres=# select * from cars where brand = 'TATA' and year = 2010;
+ brand | model | year
+-------+-------+------
+ TATA  | Nano  | 2010
+(1 row)
+
+
+postgres=# select * from cars where brand = 'TATA' or year = 1956;
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(2 rows)
+
+
+postgres=# select * from cars where brand in ('Volvo','BMW','TATA');
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(3 rows)
+
+
+postgres=# select * from cars where brand in ('Volvo','BMW','TATA','Ford');
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(3 rows)
+
+
+postgres=# select * from cars where year between 1950 and 2050;
+ brand | model | year
+-------+-------+------
+ BMW   | M1    | 1956
+ TATA  | Nano  | 2010
+(2 rows)
+
+
+postgres=# select * from cars where model is null;
+ brand | model | year
+-------+-------+------
+(0 rows)
+
+
+postgres=# select * from cars where brand not like 'B%';
+ brand | model | year
+-------+-------+------
+ Volvo | P1800 | 1693
+ TATA  | Nano  | 2010
+(2 rows)
+
+
+
+insert into person (name,age,language,nationality) values('Vishal Vanjari',22,'Marathi','India'),('John Doe',35,'English','UK'), ('Abdul Pathan',65,'Urdu','Pakistan'),('Chetan Rathod',16,'Hindi','India');
+
