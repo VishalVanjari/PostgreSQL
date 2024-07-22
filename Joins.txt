@@ -1,0 +1,287 @@
+// Create Database for Joins
+
+postgres=# create database college;
+CREATE DATABASE
+postgres=# \c college
+You are now connected to database "college" as user "postgres".
+college=# \c college;
+You are now connected to database "college" as user "postgres".
+college=# create table students(student_id serial primary key,first_name varchar(50),last_name varchar(50),email varchar(100) unique not null);
+CREATE TABLE
+college=# select * from students;
+ student_id | first_name | last_name | email
+------------+------------+-----------+-------
+(0 rows)
+
+
+college=# insert into students(first_name,last_name,email) values ('Vishal','Vanjari','vishal@gmail.com'),('Nikhil','Patil','Nikhil@gmail.com'),('Yamini','Deshmukh','yamini@gmail.com'),('Khushi','Agrawal','khushi@gmail.com'),('Sakshi','Kukreja','sakshi@gmail.com');
+INSERT 0 5
+college=# select * from students;
+ student_id | first_name | last_name |      email
+------------+------------+-----------+------------------
+          1 | Vishal     | Vanjari   | vishal@gmail.com
+          2 | Nikhil     | Patil     | Nikhil@gmail.com
+          3 | Yamini     | Deshmukh  | yamini@gmail.com
+          4 | Khushi     | Agrawal   | khushi@gmail.com
+          5 | Sakshi     | Kukreja   | sakshi@gmail.com
+(5 rows)
+
+
+college=# insert into students(first_name,last_name,email) values ('Pruthviraj','Sharma','pruthvi@gmail.com');
+INSERT 0 1
+college=# select * from students;
+ student_id | first_name | last_name |       email
+------------+------------+-----------+-------------------
+          1 | Vishal     | Vanjari   | vishal@gmail.com
+          2 | Nikhil     | Patil     | Nikhil@gmail.com
+          3 | Yamini     | Deshmukh  | yamini@gmail.com
+          4 | Khushi     | Agrawal   | khushi@gmail.com
+          5 | Sakshi     | Kukreja   | sakshi@gmail.com
+          6 | Pruthviraj | Sharma    | pruthvi@gmail.com
+(6 rows)
+
+
+college=# create table courses(course_id serial primary key, course_name varchar(100) not null,credits int not null);
+CREATE TABLE
+college=# select * from courses;
+ course_id | course_name | credits
+-----------+-------------+---------
+(0 rows)
+
+
+college=# insert into courses (course_name,credits) values ('Database System',4),('Operating System',3),('Data Structure',3);
+INSERT 0 3
+college=# select * from courses;
+ course_id |   course_name    | credits
+-----------+------------------+---------
+         1 | Database System  |       4
+         2 | Operating System |       3
+         3 | Data Structure   |       3
+(3 rows)
+
+
+college=# insert into courses (course_name,credits) values ('Advance Algoritham',2),('Computer Network',4);
+INSERT 0 2
+college=# select * from courses;
+ course_id |    course_name     | credits
+-----------+--------------------+---------
+         1 | Database System    |       4
+         2 | Operating System   |       3
+         3 | Data Structure     |       3
+         4 | Advance Algoritham |       2
+         5 | Computer Network   |       4
+(5 rows)
+
+
+college=# create table enrollments (enrollment_id serial primary key, student_id int not null references students(student_id),course_id int not null references courses(course_id),enrollment_date date default current_date);
+CREATE TABLE
+college=# select * from enrollments;
+ enrollment_id | student_id | course_id | enrollment_date
+---------------+------------+-----------+-----------------
+(0 rows)
+
+
+college=# insert into enrollments(student_id,course_id) values (1,1),(1,2),(2,1),(3,3);
+INSERT 0 4
+college=# select * from enrollments;
+ enrollment_id | student_id | course_id | enrollment_date
+---------------+------------+-----------+-----------------
+             1 |          1 |         1 | 2024-07-20
+             2 |          1 |         2 | 2024-07-20
+             3 |          2 |         1 | 2024-07-20
+             4 |          3 |         3 | 2024-07-20
+(4 rows)
+
+
+// Joins with 2 tables
+
+
+college=# select first_name,last_name,enrollment_date
+college-# from students
+college-# inner join enrollments on students.student_id = enrollments.student_id;
+ first_name | last_name | enrollment_date
+------------+-----------+-----------------
+ Vishal     | Vanjari   | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+(4 rows)
+
+
+college=# SELECT s.first_name, s.last_name, e.enrollment_date
+college-# FROM students s
+college-# LEFT JOIN enrollments e ON s.student_id = e.student_id;
+ first_name | last_name | enrollment_date
+------------+-----------+-----------------
+ Vishal     | Vanjari   | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+ Sakshi     | Kukreja   |
+ Pruthviraj | Sharma    |
+ Khushi     | Agrawal   |
+(7 rows)
+
+
+college=# select first_name,last_name,enrollment_date
+college-# from students s
+college-# right join enrollments e on s.student_id = e.student_id;
+ first_name | last_name | enrollment_date
+------------+-----------+-----------------
+ Vishal     | Vanjari   | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+(4 rows)
+
+
+college=# select first_name, last_name,enrollment_date
+college-# from students s
+college-# full outer join enrollments e on s.student_id = e.student_id;
+ first_name | last_name | enrollment_date
+------------+-----------+-----------------
+ Vishal     | Vanjari   | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+ Sakshi     | Kukreja   |
+ Pruthviraj | Sharma    |
+ Khushi     | Agrawal   |
+(7 rows)
+
+
+college=# select first_name, last_name,enrollment_date
+college-# from students
+college-# cross join enrollments;
+ first_name | last_name | enrollment_date
+------------+-----------+-----------------
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+ Khushi     | Agrawal   | 2024-07-20
+ Sakshi     | Kukreja   | 2024-07-20
+ Pruthviraj | Sharma    | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+ Khushi     | Agrawal   | 2024-07-20
+ Sakshi     | Kukreja   | 2024-07-20
+ Pruthviraj | Sharma    | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+ Khushi     | Agrawal   | 2024-07-20
+ Sakshi     | Kukreja   | 2024-07-20
+ Pruthviraj | Sharma    | 2024-07-20
+ Vishal     | Vanjari   | 2024-07-20
+ Nikhil     | Patil     | 2024-07-20
+ Yamini     | Deshmukh  | 2024-07-20
+ Khushi     | Agrawal   | 2024-07-20
+ Sakshi     | Kukreja   | 2024-07-20
+ Pruthviraj | Sharma    | 2024-07-20
+(24 rows)
+
+
+
+// Joins with 3 tables
+
+
+college=# select first_name,last_name,course_name
+college-# from students s
+college-# inner join enrollments e on s.student_id = e.student_id
+college-# inner join courses c on e.course_id = c.course_id;
+ first_name | last_name |   course_name
+------------+-----------+------------------
+ Vishal     | Vanjari   | Database System
+ Vishal     | Vanjari   | Operating System
+ Nikhil     | Patil     | Database System
+ Yamini     | Deshmukh  | Data Structure
+(4 rows)
+
+
+college=# select first_name,last_name,course_name
+college-# from students s
+college-# left join enrollments e on s.student_id = e.student_id
+college-# left join courses c on e.course_id = c.course_id;
+ first_name | last_name |   course_name
+------------+-----------+------------------
+ Vishal     | Vanjari   | Database System
+ Vishal     | Vanjari   | Operating System
+ Nikhil     | Patil     | Database System
+ Yamini     | Deshmukh  | Data Structure
+ Sakshi     | Kukreja   |
+ Pruthviraj | Sharma    |
+ Khushi     | Agrawal   |
+(7 rows)
+
+
+college=# select first_name,last_name,course_name
+college-# from students s
+college-# right join enrollments e on s.student_id = e.student_id
+college-# right join courses c on e.course_id = c.course_id;
+ first_name | last_name |    course_name
+------------+-----------+--------------------
+ Vishal     | Vanjari   | Database System
+ Vishal     | Vanjari   | Operating System
+ Nikhil     | Patil     | Database System
+ Yamini     | Deshmukh  | Data Structure
+            |           | Computer Network
+            |           | Advance Algoritham
+(6 rows)
+
+
+college=# select first_name,last_name,course_name
+college-# from students s
+college-# full outer join enrollments e on s.student_id = e.student_id
+college-# full outer join courses c on e.course_id = c.course_id;
+ first_name | last_name |    course_name
+------------+-----------+--------------------
+ Vishal     | Vanjari   | Database System
+ Vishal     | Vanjari   | Operating System
+ Nikhil     | Patil     | Database System
+ Yamini     | Deshmukh  | Data Structure
+ Sakshi     | Kukreja   |
+ Pruthviraj | Sharma    |
+ Khushi     | Agrawal   |
+            |           | Computer Network
+            |           | Advance Algoritham
+(9 rows)
+
+
+
+
+
+//Unionand union all
+
+college=# select * from students
+college-# union
+college-# select * from students;
+ student_id | first_name | last_name |       email
+------------+------------+-----------+-------------------
+          2 | Nikhil     | Patil     | Nikhil@gmail.com
+          4 | Khushi     | Agrawal   | khushi@gmail.com
+          3 | Yamini     | Deshmukh  | yamini@gmail.com
+          1 | Vishal     | Vanjari   | vishal@gmail.com
+          6 | Pruthviraj | Sharma    | pruthvi@gmail.com
+          5 | Sakshi     | Kukreja   | sakshi@gmail.com
+(6 rows)
+
+
+college=# select * from students
+college-# union all
+college-# select * from students;
+ student_id | first_name | last_name |       email
+------------+------------+-----------+-------------------
+          1 | Vishal     | Vanjari   | vishal@gmail.com
+          2 | Nikhil     | Patil     | Nikhil@gmail.com
+          3 | Yamini     | Deshmukh  | yamini@gmail.com
+          4 | Khushi     | Agrawal   | khushi@gmail.com
+          5 | Sakshi     | Kukreja   | sakshi@gmail.com
+          6 | Pruthviraj | Sharma    | pruthvi@gmail.com
+          1 | Vishal     | Vanjari   | vishal@gmail.com
+          2 | Nikhil     | Patil     | Nikhil@gmail.com
+          3 | Yamini     | Deshmukh  | yamini@gmail.com
+          4 | Khushi     | Agrawal   | khushi@gmail.com
+          5 | Sakshi     | Kukreja   | sakshi@gmail.com
+          6 | Pruthviraj | Sharma    | pruthvi@gmail.com
+(12 rows)
