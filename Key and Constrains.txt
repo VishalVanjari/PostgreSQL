@@ -1,0 +1,186 @@
+company=# create database keyandconstrains;
+CREATE DATABASE
+company=# \c keyandconstrains;
+You are now connected to database "keyandconstrains" as user "postgres".
+
+
+// Primary Key 
+
+keyandconstrains=# create table p1(emp_id serial primary key,fname varchar(255),lname varchar (255));
+CREATE TABLE
+keyandconstrains=# select * from p1;
+ emp_id | fname | lname
+--------+-------+-------
+(0 rows)
+
+// Foreign Key
+
+keyandconstrains=# create table department(dep_id serial primary key,dep_name varchar (255),emp_id int references p1(emp_id));
+CREATE TABLE
+keyandconstrains=# select * from department;
+ dep_id | dep_name | emp_id
+--------+----------+--------
+(0 rows)
+
+//Unique Key
+
+keyandconstrains=# create table p2(emp_id serial primary key,first_name varchar(50),last_name varchar (255),email varchar(100) unique);
+CREATE TABLE
+keyandconstrains=# select * from p2;
+ emp_id | first_name | last_name | email
+--------+------------+-----------+-------
+(0 rows)
+
+
+// Composite Key
+
+keyandconstrains=# create table projects(emp_id int,project_id int,primary key(emp_id,project_id));
+CREATE TABLE
+keyandconstrains=# select * from projects;
+ emp_id | project_id
+--------+------------
+(0 rows)
+
+
+keyandconstrains=# create table p3(roll_no serial primary key,fname varchar(50) not null,lname varchar(50) not null);
+CREATE TABLE
+keyandconstrains=# select * from p3;
+ roll_no | fname | lname
+---------+-------+-------
+(0 rows)
+
+keyandconstrains=# create table projects(emp_id int,project_id int,primary key(emp_id,project_id));
+CREATE TABLE
+keyandconstrains=# select * from projects;
+ emp_id | project_id
+--------+------------
+(0 rows)
+
+
+
+
+// Constrains
+
+//1.
+
+keyandconstrains=# insert imto p3 (fname,lname) values ('vishal','rathod';)
+keyandconstrains-# insert imto p3 (fname,lname) values ('vishal','rathod');
+ERROR:  syntax error at or near "imto"
+LINE 1: insert imto p3 (fname,lname) values ('vishal','rathod';)
+               ^
+keyandconstrains=# insert into p3 (fname,lname) values ('vishal','rathod');
+INSERT 0 1
+keyandconstrains=# select * from p3;
+ roll_no | fname  | lname
+---------+--------+--------
+       1 | vishal | rathod
+(1 row)
+
+
+keyandconstrains=# create table p4(emp_id serial primary key,fname varchar(25),lname varchar(25),salary decimal (10,2),check(salary > 0));
+CREATE TABLE
+keyandconstrains=# select * from p4;
+ emp_id | fname | lname | salary
+--------+-------+-------+--------
+(0 rows)
+
+
+keyandconstrains=# insert into p4 (fname,lname,salary) values ('vishal','rathod',12000);
+INSERT 0 1
+
+keyandconstrains=# insert into p4 (fname,lname,salary) values ('vishal','',1);
+INSERT 0 1
+keyandconstrains=# select * from p4;
+ emp_id | fname  | lname  |  salary
+--------+--------+--------+----------
+      1 | vishal | rathod | 12000.00
+      2 | vishal |        | 12000.00
+      3 | vishal |        |     1.00
+      5 | vishal |        |     1.00
+(4 rows)
+
+
+keyandconstrains=# create table p5(emp_id serial primary key,fname varchar (255),lname varchar(255),salary decimal (10,2) default 0,start_date date default current_date);
+CREATE TABLE
+keyandconstrains=# select * from p5;
+ emp_id | fname | lname | salary | start_date
+--------+-------+-------+--------+------------
+(0 rows)
+
+
+keyandconstrains=# insert into p5 (fname,lname,salary,start_date) values ('chetan','rathod','12000','30/03/2002');
+INSERT 0 1
+keyandconstrains=# select * from p5;
+ emp_id | fname  | lname  |  salary  | start_date
+--------+--------+--------+----------+------------
+      1 | chetan | rathod | 12000.00 | 2002-03-30
+(1 row)
+
+
+keyandconstrains=# create table p6(emp_id serial primary key,fname varchar (255),lname varchar(255),salary decimal (10,2) default 0,start_date DATE DEFAULT CURRENT_DATE);
+CREATE TABLE
+keyandconstrains=# insert into p6 (fname,lname,salary,start_date) values ('chetan','rathod','12000','30/03/2002');
+INSERT 0 1
+keyandconstrains=# select * from p6;
+ emp_id | fname  | lname  |  salary  | start_date
+--------+--------+--------+----------+------------
+      1 | chetan | rathod | 12000.00 | 2002-03-30
+(1 row)
+
+
+keyandconstrains=# create table p7(emp_id serial primary key,fname varchar (255),lname varchar(255),salary int default 0,start_date DATE DEFAULT CURRENT_DATE);
+CREATE TABLE
+
+keyandconstrains=# create table p8(emp_id serial primary key,fname varchar (255),lname varchar(255),salary numeric default 0,start_date DATE DEFAULT CURRENT_DATE);
+CREATE TABLE
+keyandconstrains=# insert into p8 (fname,lname,salary,start_date) values ('chetan','rathod','12000','30/03/2002');
+INSERT 0 1
+keyandconstrains=# select * from p8;
+ emp_id | fname  | lname  | salary | start_date
+--------+--------+--------+--------+------------
+      1 | chetan | rathod |  12000 | 2002-03-30
+(1 row)
+
+
+keyandconstrains=# CREATE TABLE projects (
+    project_id SERIAL PRIMARY KEY,
+    project_name VARCHAR(100) DEFAULT 'Untitled Project',
+    start_date DATE DEFAULT CURRENT_DATE,
+    end_date DATE DEFAULT (CURRENT_DATE + INTERVAL '30 days'),
+    budget NUMERIC DEFAULT 1000,
+    is_active BOOLEAN DEFAULT TRUE
+ );
+CREATE TABLE
+
+keyandconstrains=# INSERT INTO projects (project_name, start_date, end_date, budget, is_active)
+keyandconstrains-# VALUES ('Website Redesign', '2024-08-01', '2024-09-01', 5000, TRUE);
+INSERT 0 1
+keyandconstrains=# select * from projects;
+ project_id |   project_name   | start_date |  end_date  | budget | is_active
+------------+------------------+------------+------------+--------+-----------
+          1 | Website Redesign | 2024-08-01 | 2024-09-01 |   5000 | t
+(1 row)
+
+                                                           
+keyandconstrains=# VALUES ('Website Redesign');
+     column1
+------------------
+ Website Redesign
+(1 row)
+
+
+keyandconstrains=# select * from projects;
+ project_id |   project_name   | start_date |  end_date  | budget | is_active
+------------+------------------+------------+------------+--------+-----------
+          1 | Website Redesign | 2024-08-01 | 2024-09-01 |   5000 | t
+(1 row)
+
+
+keyandconstrains=# INSERT INTO projects (project_name, is_active) values ('Mern Stack',false);
+INSERT 0 1
+keyandconstrains=# select * from projects;
+ project_id |   project_name   | start_date |  end_date  | budget | is_active
+------------+------------------+------------+------------+--------+-----------
+          1 | Website Redesign | 2024-08-01 | 2024-09-01 |   5000 | t
+          2 | Mern Stack       | 2024-07-22 | 2024-08-21 |   1000 | f
+(2 rows)
