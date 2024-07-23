@@ -1,0 +1,149 @@
+//Group By
+
+postgres=# select count(name),country
+postgres-# from person
+postgres-# group by country;
+ count | country
+-------+----------
+     1 | Pakistan
+     1 | UK
+     2 | India
+(3 rows)
+
+college=# select first_name,count(students.student_id) from students
+college-# left join enrollments on students.student_id = enrollments.student_id
+college-# group by first_name;
+ first_name | count
+------------+-------
+ Vishal     |     2
+ Nikhil     |     1
+ Sakshi     |     1
+ Khushi     |     1
+ Yamini     |     1
+ Pruthviraj |     1
+(6 rows)
+
+
+//Having
+
+
+college=# select count(course_id),credits from courses group by credits having count (course_id) > 1;
+ count | credits
+-------+---------
+     2 |       3
+     2 |       4
+(2 rows)
+
+
+college=# \c postgres
+You are now connected to database "postgres" as user "postgres".
+postgres=# select count(name),country from person group by country having count(country) > 1;
+ count | country
+-------+---------
+     2 | India
+(1 row)
+
+
+postgres=# select count(name),country from person group by country having count(country) < 2;
+ count | country
+-------+----------
+     1 | Pakistan
+     1 | UK
+(2 rows)
+
+
+//Exists and Non Exists
+
+college=# select first_name,last_name from students where exists(select student_id from enrollments where student_id = students.student_id);
+ first_name | last_name
+------------+-----------
+ Vishal     | Vanjari
+ Nikhil     | Patil
+ Yamini     | Deshmukh
+(3 rows)
+
+
+college=# select first_name,last_name from students where not exists(select student_id from enrollments where student_id = students.student_id);
+ first_name | last_name
+------------+-----------
+ Sakshi     | Kukreja
+ Pruthviraj | Sharma
+ Khushi     | Agrawal
+(3 rows)
+
+
+//Any Operator
+
+
+college=# select course_name from courses where course_id = any (select course_id from enrollments where enrollment_id > 2);
+   course_name
+-----------------
+ Database System
+ Data Structure
+(2 rows)
+
+
+college=# select course_name from courses where course_id = any (select course_id from enrollments where enrollment_id > 1);
+   course_name
+------------------
+ Database System
+ Operating System
+ Data Structure
+(3 rows)
+
+
+//All
+
+college=# select course_name from courses where course_id = all (select course_id from enrollments where enrollment_id > 1);
+ course_name
+-------------
+(0 rows)
+
+
+college=# select course_name from courses where course_id = all (select course_id from enrollments where enrollment_id > 3);
+  course_name
+----------------
+ Data Structure
+(1 row)
+
+
+//Case
+
+postgres=# select * from person;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(4 rows)
+
+
+postgres=# select name ,case
+postgres-# when age < 18 then 'under age'
+postgres-# when age > 17 then 'over age'
+postgres-# else 'Not age'
+postgres-# end from person;
+      name      |   case
+----------------+-----------
+ Vishal Vanjari | over age
+ John Doe       | over age
+ Abdul Pathan   | over age
+ Chetan Rathod  | under age
+(4 rows)
+
+
+//Case with aliases
+
+postgres=# select name ,case
+postgres-# when age < 18 then 'under age'
+postgres-# when age > 17 then 'over age'
+postgres-# else 'Not age'
+postgres-# end as age_category from person;
+      name      | age_category
+----------------+--------------
+ Vishal Vanjari | over age
+ John Doe       | over age
+ Abdul Pathan   | over age
+ Chetan Rathod  | under age
+(4 rows)
