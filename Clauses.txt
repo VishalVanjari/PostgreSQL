@@ -1,0 +1,301 @@
+
+
+postgres=# create table person(name varchar (255),age int,language varchar (255),country varchar (255));
+CREATE TABLE
+postgres=# select * from person;
+ name | age | language | country
+------+-----+----------+-------------
+(0 rows)
+
+postgres=# insert into person (name,age,language,country) values('Vishal Vanjari',22,'Marathi','India'),('John Doe',35,'English','UK'), ('Abdul Pathan',65,'Urdu','Pakistan'),('Chetan Rathod',16,'Hindi','India');
+INSERT 0 4
+postgres=# select * from person;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(4 rows)
+
+// 1.SELECT DISTINCT Statement
+
+postgres=# select distinct country from person;
+ country
+----------
+ Pakistan
+ UK
+ India
+(3 rows)
+
+
+// 2.SELECT DISTINCT Count
+
+postgres=# select count(distinct country) from person;
+ count
+-------
+     3
+(1 row)
+
+
+// 3. Where
+
+postgres=# select * from person where age > 23;
+     name     | age | language | country
+--------------+-----+----------+----------
+ John Doe     |  35 | English  | UK
+ Abdul Pathan |  65 | Urdu     | Pakistan
+(2 rows)
+
+
+postgres=# select * from person where country = 'india';
+ name | age | language | country
+------+-----+----------+---------
+(0 rows)
+
+
+postgres=# select * from person where country = 'India';
+      name      | age | language | country
+----------------+-----+----------+---------
+ Vishal Vanjari |  22 | Marathi  | India
+ Chetan Rathod  |  16 | Hindi    | India
+(2 rows)
+
+
+// 4. Order By
+
+postgres=# select * from person order by name;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+ John Doe       |  35 | English  | UK
+ Vishal Vanjari |  22 | Marathi  | India
+(4 rows)
+
+
+postgres=# select * from person order by age;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Chetan Rathod  |  16 | Hindi    | India
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+(4 rows)
+
+
+postgres=# select * from person order by age desc;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ John Doe       |  35 | English  | UK
+ Vishal Vanjari |  22 | Marathi  | India
+ Chetan Rathod  |  16 | Hindi    | India
+
+
+postgres=# select * from person order by name desc;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Chetan Rathod  |  16 | Hindi    | India
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+(4 rows)
+
+
+// 5. LIMIT Clause
+
+postgres=# select * from person;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(4 rows)
+
+
+postgres=# select * from person limit 2;
+      name      | age | language | country
+----------------+-----+----------+---------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+(2 rows)
+
+
+// 6.Offset clause
+
+postgres=# select * from person limit 2 offset 2;
+     name      | age | language | country
+---------------+-----+----------+----------
+ Abdul Pathan  |  65 | Urdu     | Pakistan
+ Chetan Rathod |  16 | Hindi    | India
+(2 rows)
+
+
+postgres=# select * from person limit 2 offset 3;
+     name      | age | language | country
+---------------+-----+----------+---------
+ Chetan Rathod |  16 | Hindi    | India
+(1 row)
+
+
+
+
+// 6.Set Column Name
+ 
+postgres=# select min(age) as lowest_age from person;
+ lowest_age
+------------
+         16
+(1 row)
+
+
+postgres=# select max(age) as largest_age from person;
+ largest_age
+-------------
+          65
+(1 row)
+
+
+//7. Like and Ilike
+
+postgres=# select * from person where name like 'V%';
+      name      | age | language | country
+----------------+-----+----------+---------
+ Vishal Vanjari |  22 | Marathi  | India
+(1 row)
+
+
+postgres=# select * from person where name like '%D';
+ name | age | language | country
+------+-----+----------+---------
+(0 rows)
+
+
+postgres=# select * from person;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(4 rows)
+
+
+postgres=# select * from person where name like '%d';
+     name      | age | language | country
+---------------+-----+----------+---------
+ Chetan Rathod |  16 | Hindi    | India
+(1 row)
+
+
+postgres=# select * from person where name like '%a%';
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(3 rows)
+
+
+postgres=# select * from person where country like '_ndia';
+      name      | age | language | country
+----------------+-----+----------+---------
+ Vishal Vanjari |  22 | Marathi  | India
+ Chetan Rathod  |  16 | Hindi    | India
+(2 rows)
+
+
+//8. IN and Not IN
+
+postgres=# select * from person where country in ('Germant','India','France');
+      name      | age | language | country
+----------------+-----+----------+---------
+ Vishal Vanjari |  22 | Marathi  | India
+ Chetan Rathod  |  16 | Hindi    | India
+(2 rows)
+
+
+postgres=# select * from person where country not in ('Germant','India','France');
+     name     | age | language | country
+--------------+-----+----------+----------
+ John Doe     |  35 | English  | UK
+ Abdul Pathan |  65 | Urdu     | Pakistan
+(2 rows)
+
+
+//9. Between
+
+postgres=# select * from person where age between 22 and 80;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+(3 rows)
+
+
+postgres=# select * from person where age between 22 and 65;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+(3 rows)
+
+
+postgres=# select * from person where country between 'UK' and 'Pakistan';
+ name | age | language | country
+------+-----+----------+---------
+(0 rows)
+
+
+postgres=# select * from person where country between 'Pakistan' and 'UK';
+     name     | age | language | country
+--------------+-----+----------+----------
+ John Doe     |  35 | English  | UK
+ Abdul Pathan |  65 | Urdu     | Pakistan
+(2 rows)
+
+
+postgres=# select * from person where country between 'India' and 'UK';
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ John Doe       |  35 | English  | UK
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ Chetan Rathod  |  16 | Hindi    | India
+(4 rows)
+
+
+postgres=# select * from person where country between 'India' and 'UK' order by country;
+      name      | age | language | country
+----------------+-----+----------+----------
+ Vishal Vanjari |  22 | Marathi  | India
+ Chetan Rathod  |  16 | Hindi    | India
+ Abdul Pathan   |  65 | Urdu     | Pakistan
+ John Doe       |  35 | English  | UK
+(4 rows)
+
+
+//10.AS (aliases)
+
+postgres=# select name || age as product from person;
+     product
+------------------
+ Vishal Vanjari22
+ John Doe35
+ Abdul Pathan65
+ Chetan Rathod16
+(4 rows)
+
+
+postgres=# select name ||' ' || age as product from person;
+      product
+-------------------
+ Vishal Vanjari 22
+ John Doe 35
+ Abdul Pathan 65
+ Chetan Rathod 16
+(4 rows)
