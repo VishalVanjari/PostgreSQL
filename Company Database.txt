@@ -1,0 +1,343 @@
+// Database Company 
+
+postgres=# create database company;
+CREATE DATABASE
+postgres=# \c company;
+You are now connected to database "company" as user "postgres".
+
+company=# create table employees (employee_id serial primary key, first_name varchar (255), last_name varchar(255), department_id int, salary decimal(10,2));
+CREATE TABLE
+
+company=# select * from employees;
+ employee_id | first_name | last_name | department_id | salary
+--------------+------------+-----------+---------------+--------
+(0 rows)
+
+
+company=# create table departments(department_id serial primary key, department_name varchar(255));
+CREATE TABLE
+company=# select * from departments;
+ department_id | department_name
+---------------+-----------------
+(0 rows)
+
+
+company=# create table projects(project_id serial primary key, project_name varchar(255), employee_id int);
+CREATE TABLE
+company=# select * from projects;
+ project_id | project_name | employee_id
+------------+--------------+-------------
+(0 rows)
+
+
+company=# insert into employees(first_name,last_name,department_id,salary) values
+company-# ('Nikhil','Khot',3,60000),
+company-# ('Vishal','Vanjari',2,75000),
+company-# ('Yash','Wani',1,50000),
+company-# ('Gaurav','Patil',4,80000),
+company-# ('Rahul','Sharma',3,35000);
+INSERT 0 5
+
+company=# insert into departments(department_name) values ('Human Resources'),('Finance'),('Engineering'),('Marketing');
+INSERT 0 4
+company=# select * from departments;
+ department_id | department_name
+---------------+-----------------
+             1 | Human Resources
+             2 | Finance
+             3 | Engineering
+             4 | Marketing
+(4 rows)
+
+                    
+company=# insert into projects (project_name,employee_id) values ('Project Alpha',1),('Project Beta',2),('Project Gamma',3),('Project Delta',4),('Project Epsilon',5);
+INSERT 0 5
+company=# select * from projects;
+ project_id |  project_name   | employee_id
+------------+-----------------+-------------
+          1 | Project Alpha   |           1
+          2 | Project Beta    |           2
+          3 | Project Gamma   |           3
+          4 | Project Delta   |           4
+          5 | Project Epsilon |           5
+(5 rows)
+
+
+company=# select * from employees;
+ employee__id | first_name | last_name | department_id |  salary
+--------------+------------+-----------+---------------+----------
+            1 | Nikhil     | Khot      |             3 | 60000.00
+            2 | Vishal     | Vanjari   |             2 | 75000.00
+            3 | Yash       | Wani      |             1 | 50000.00
+            4 | Gaurav     | Patil     |             4 | 80000.00
+            5 | Rahul      | Sharma    |             3 | 35000.00
+(5 rows)
+
+
+company=# select * from departments;
+ department_id | department_name
+---------------+-----------------
+             1 | Human Resources
+             2 | Finance
+             3 | Engineering
+             4 | Marketing
+(4 rows)
+
+company=# select * from projects;
+ project_id |  project_name   | employee_id
+------------+-----------------+-------------
+          1 | Project Alpha   |           1
+          2 | Project Beta    |           2
+          3 | Project Gamma   |           3
+          4 | Project Delta   |           4
+          5 | Project Epsilon |           5
+(5 rows)
+
+
+                                              
+company=# ALTER TABLE employees
+company-# ADD CONSTRAINT fk_department
+company-# FOREIGN KEY (department_id)
+company-# REFERENCES departments (department_id);
+ALTER TABLE
+
+company=# ALTER TABLE projects
+company-# ADD CONSTRAINT fk_employee
+company-# FOREIGN KEY (employee_id)
+company-# REFERENCES employees (employee_id);
+ALTER TABLE
+
+company=# SELECT e.first_name, e.last_name
+company-# FROM employees e
+company-# INNER JOIN departments d ON e.department_id = d.department_id
+company-# WHERE d.department_name = 'Finance';
+ first_name | last_name
+------------+-----------
+ Vishal     | Vanjari
+(1 row)
+
+
+company=# select first_name,last_name,salary,department_name from employees inner join departments on employees.department_id = departments.department_id;
+ first_name | last_name |  salary  | department_name
+------------+-----------+----------+-----------------
+ Yash       | Wani      | 50000.00 | Human Resources
+ Vishal     | Vanjari   | 75000.00 | Finance
+ Rahul      | Sharma    | 35000.00 | Engineering
+ Nikhil     | Khot      | 60000.00 | Engineering
+ Gaurav     | Patil     | 80000.00 | Marketing
+(5 rows)
+
+
+
+company=# select first_name,last_name from employees inner join departments on employees.department_id = departments.department_id where department_name = 'Engineering';
+ first_name | last_name
+------------+-----------
+ Nikhil     | Khot
+ Rahul      | Sharma
+(2 rows)
+
+
+company=# select sum(salary) from employees;
+    sum
+-----------
+ 300000.00
+(1 row)
+
+
+company=# select avg(salary) from employees;
+        avg
+--------------------
+ 60000.000000000000
+(1 row)
+
+
+company=# select avg(salary) :: numeric(10,2) from employees;
+   avg
+----------
+ 60000.00
+(1 row)
+
+
+company=# select department_name,avg(salary) as avg_salry from employees inner join departments on departments.department_id = employees.department_id group by departments.department_name;
+ department_name |     avg_salry
+-----------------+--------------------
+ Engineering     | 47500.000000000000
+ Marketing       | 80000.000000000000
+ Finance         | 75000.000000000000
+ Human Resources | 50000.000000000000
+(4 rows)
+
+
+company=# select department_name,avg(salary):: numeric(10,2) as avg_salry from employees inner join departments on departments.department_id = employees.department_id group by departments.department_name;
+ department_name | avg_salry
+-----------------+-----------
+ Engineering     |  47500.00
+ Marketing       |  80000.00
+ Finance         |  75000.00
+ Human Resources |  50000.00
+(4 rows)
+
+
+company=# select first_name,last_name from employees inner join projects on employees.employee_id = projects.employee_id;
+ first_name | last_name
+------------+-----------
+ Nikhil     | Khot
+ Vishal     | Vanjari
+ Yash       | Wani
+ Gaurav     | Patil
+ Rahul      | Sharma
+(5 rows)
+
+company=# select max(salary) from employees inner join departments on employees.department_id = departments.department_id where departments.department_name = 'Marketing';
+   max
+----------
+ 80000.00
+(1 row)
+
+
+company=# select max(salary) as highest_salary from employees inner join departments on employees.department_id = departments.department_id where departments.department_name = 'Marketing';
+ highest_salary
+----------------
+       80000.00
+(1 row)
+
+
+company=# select count(department_name) from departments;
+ count
+-------
+     4
+(1 row)
+
+
+company=# select count(employee_id) from employees inner join departments on employees.department_id = departments.department_id;
+ count
+-------
+     5
+(1 row)
+
+
+company=# select department_name,count(employee_id) from employees inner join departments on employees.department_id = departments.department_id group by departments.department_name;
+ department_name | count
+-----------------+-------
+ Engineering     |     2
+ Marketing       |     1
+ Finance         |     1
+ Human Resources |     1
+(4 rows)
+
+
+company=# select department_name,count(employee_id) as emp_count from employees inner join departments on employees.department_id = departments.department_id group by departments.department_name;
+ department_name | emp_count
+-----------------+-----------
+ Engineering     |         2
+ Marketing       |         1
+ Finance         |         1
+ Human Resources |         1
+(4 rows)
+
+
+company=# select project_name,first_name,last_name from employees as e inner join projects as p on e.employee_id = p.employee_id;
+  project_name   | first_name | last_name
+-----------------+------------+-----------
+ Project Alpha   | Nikhil     | Khot
+ Project Beta    | Vishal     | Vanjari
+ Project Gamma   | Yash       | Wani
+ Project Delta   | Gaurav     | Patil
+ Project Epsilon | Rahul      | Sharma
+(5 rows)
+
+
+company=# select first_name,last_name,project_name from employees as e inner join projects as p on e.employee_id = p.employee_id;
+ first_name | last_name |  project_name
+------------+-----------+-----------------
+ Nikhil     | Khot      | Project Alpha
+ Vishal     | Vanjari   | Project Beta
+ Yash       | Wani      | Project Gamma
+ Gaurav     | Patil     | Project Delta
+ Rahul      | Sharma    | Project Epsilon
+(5 rows)
+
+
+company=# SELECT e.first_name, e.last_name
+company-# FROM employees e
+company-# LEFT JOIN projects p ON e.employee_id = p.employee_id
+company-# WHERE p.project_id IS NULL;
+ first_name | last_name
+------------+-----------
+(0 rows)
+
+
+company=# select department_name,avg(salary) from employees e inner join departments d on e.department_id = d.department_id group by d.department_name;
+ department_name |        avg
+-----------------+--------------------
+ Engineering     | 47500.000000000000
+ Marketing       | 80000.000000000000
+ Finance         | 75000.000000000000
+ Human Resources | 50000.000000000000
+(4 rows)
+
+
+company=# select department_name,avg(salary) from employees e inner join departments d on e.department_id = d.department_id group by d.department_name order by avg desc;
+ department_name |        avg
+-----------------+--------------------
+ Marketing       | 80000.000000000000
+ Finance         | 75000.000000000000
+ Human Resources | 50000.000000000000
+ Engineering     | 47500.000000000000
+(4 rows)
+
+
+company=# select department_name,avg(salary) from employees e inner join departments d on e.department_id = d.department_id group by d.department_name order by avg desc limit 1;
+ department_name |        avg
+-----------------+--------------------
+ Marketing       | 80000.000000000000
+(1 row)
+
+                                                             ^
+company=# select department_name,avg(salary) from employees e inner join departments d on e.department_id = d.department_id group by d.department_name order by avg desc;
+ department_name |        avg
+-----------------+--------------------
+ Marketing       | 80000.000000000000
+ Finance         | 75000.000000000000
+ Human Resources | 50000.000000000000
+ Engineering     | 47500.000000000000
+(4 rows)
+
+
+company=# select department_name,avg(salary) from employees e inner join departments d on e.department_id = d.department_id group by d.department_name order by avg desc limit 1;
+ department_name |        avg
+-----------------+--------------------
+ Marketing       | 80000.000000000000
+(1 row)
+
+
+company=# select department_name from departments inner join employees on employees.department_id = departments.department_id where first_name = 'Vishal';
+ department_name
+-----------------
+ Finance
+(1 row)
+
+
+company=# select department_name from departments inner join employees on employees.department_id = departments.department_id where first_name = 'Nikhil';
+ department_name
+-----------------
+ Engineering
+(1 row)
+
+
+company=# select department_name from departments inner join employees on employees.department_id = departments.department_id where first_name = NULL;
+ department_name
+-----------------
+(0 rows)
+
+
+                                                             ^
+company=# select first_name,last_name,count(project_id) as Project_Count from employees left join projects on employees.employee_id = projects.employee_id group by employees.employee_id;
+ first_name | last_name | project_count
+------------+-----------+---------------
+ Gaurav     | Patil     |             1
+ Vishal     | Vanjari   |             1
+ Yash       | Wani      |             1
+ Nikhil     | Khot      |             1
+ Rahul      | Sharma    |             1
+(5 rows)
