@@ -1,0 +1,85 @@
+
+demofunction=# create procedure insertBook(b_title varchar,b_author varchar,b_publication_year,b_genre varchar)
+demofunction-# as $$
+demofunction$# begin
+demofunction$# insert into books (title,author,publication_year,genre)
+demofunction$# values (b_title,b_author,b_publication_year,b_genre);
+demofunction$# end;
+demofunction$# $$
+demofunction-# language plpgsql;
+ERROR:  type b_publication_year does not exist
+demofunction=# create procedure insertBook(b_title varchar,b_author varchar,b_publication_year int,b_genre varchar)
+demofunction-# as $$
+demofunction$# begin
+demofunction$# insert into books (title,author,publication_year,genre)
+demofunction$# values (b_title,b_author,b_publication_year,b_genre);
+demofunction$# end;
+demofunction$# $$
+demofunction-# language plpgsql;
+CREATE PROCEDURE
+demofunction=# call insertBook('Wings of fire','APJ Abdul Kalam',2008,'Motivation');
+CALL
+
+                 ^
+demofunction=# select * from books;
+ book_id |         title         |       author        | publication_year |   genre
+---------+-----------------------+---------------------+------------------+------------
+       1 | To Kill a Mockingbird | Harper Lee          |             1960 | Fiction
+       2 | 1984                  | George Orwell       |             1949 | Dystopian
+       3 | Moby-Dick             | Herman Melville     |             1851 | Adventure
+       4 | The Great Gatsby      | F. Scott Fitzgerald |             1925 | Fiction
+       5 | Pride and Prejudice   | Jane Austen         |             1813 | Romance
+       6 | Wings of fire         | APJ Abdul Kalam     |             2008 | Motivation
+(6 rows)
+
+
+demofunction=# call insertBook('Literary fiction','John Doe',1984,'Friction');
+CALL
+demofunction=# select * from books;
+ book_id |         title         |       author        | publication_year |   genre
+---------+-----------------------+---------------------+------------------+------------
+       1 | To Kill a Mockingbird | Harper Lee          |             1960 | Fiction
+       2 | 1984                  | George Orwell       |             1949 | Dystopian
+       3 | Moby-Dick             | Herman Melville     |             1851 | Adventure
+       4 | The Great Gatsby      | F. Scott Fitzgerald |             1925 | Fiction
+       5 | Pride and Prejudice   | Jane Austen         |             1813 | Romance
+       6 | Wings of fire         | APJ Abdul Kalam     |             2008 | Motivation
+       7 | Literary fiction      | John Doe            |             1984 | Friction
+(7 rows)
+
+
+
+demofunction=# create procedure countBookByGenre(b_genre varchar)
+demofunction-# as $$
+demofunction$# declare count_no int;
+demofunction$# begin
+demofunction$# select count(book_id) into count_no
+demofunction$# from books
+demofunction$# where genre = b_genre;
+demofunction$# raise notice 'Count : %',count_no;
+demofunction$# end;
+demofunction$# $$
+demofunction-# language plpgsql;
+CREATE PROCEDURE
+demofunction=# call countBookByGenre('Motivation');
+NOTICE:  Count : 1
+CALL
+
+
+
+
+demofunction=# CREATE PROCEDURE updateBookGenre(    p_book_id INTEGER,    p_new_genre VARCHAR)AS $$BEGIN    IF EXISTS (SELECT 1 FROM books WHERE book_id = p_book_id) THEN        UPDATE books        SET genre = p_new_genre        WHERE book_id = p_book_id;    ELSE        RAISE NOTICE 'Book with ID % does not exist.', p_book_id;    END IF;END;$$ LANGUAGE plpgsql;
+CREATE PROCEDURE
+demofunction=# CALL updateBookGenre(1, 'Science Fiction');
+CALL
+demofunction=# select * from books;
+ book_id |         title         |       author        | publication_year |      genre
+---------+-----------------------+---------------------+------------------+-----------------
+       2 | 1984                  | George Orwell       |             1949 | Dystopian
+       3 | Moby-Dick             | Herman Melville     |             1851 | Adventure
+       4 | The Great Gatsby      | F. Scott Fitzgerald |             1925 | Fiction
+       5 | Pride and Prejudice   | Jane Austen         |             1813 | Romance
+       6 | Wings of fire         | APJ Abdul Kalam     |             2008 | Motivation
+       7 | Literary fiction      | John Doe            |             1984 | Friction
+       1 | To Kill a Mockingbird | Harper Lee          |             1960 | Science Fiction
+(7 rows)
