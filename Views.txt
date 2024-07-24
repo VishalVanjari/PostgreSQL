@@ -1,0 +1,45 @@
+demofunction=# create view view_books as
+demofunction-# select book_id,title,author
+demofunction-# from books;
+CREATE VIEW
+demofunction=# select * from view_bookks;
+ERROR:  relation "view_bookks" does not exist
+LINE 1: select * from view_bookks;
+                      ^
+demofunction=# select * from view_books;
+ book_id |         title         |       author
+---------+-----------------------+---------------------
+       2 | 1984                  | George Orwell
+       3 | Moby-Dick             | Herman Melville
+       4 | The Great Gatsby      | F. Scott Fitzgerald
+       5 | Pride and Prejudice   | Jane Austen
+       6 | Wings of fire         | APJ Abdul Kalam
+       7 | Literary fiction      | John Doe
+       1 | To Kill a Mockingbird | Harper Lee
+(7 rows)
+
+
+demofunction=# create view view_genre_count as
+demofunction-# select genre,count(*) as genre_count
+demofunction-# from books
+demofunction-# group by genre;
+CREATE VIEW
+demofunction=# select * from view_genre_books;
+ERROR:  relation "view_genre_books" does not exist
+LINE 1: select * from view_genre_books;
+                      ^
+demofunction=# select * from view_genre_count;
+      genre      | genre_count
+-----------------+-------------
+ Romance         |           1
+ Motivation      |           1
+ Adventure       |           1
+ Friction        |           1
+ Dystopian       |           1
+ Science Fiction |           1
+ Fiction         |           1
+(7 rows)
+
+
+demofunction=# drop view if exists view_updated_books;
+DROP VIEW
