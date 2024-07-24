@@ -1,0 +1,122 @@
+// Functions
+
+keyandconstrains=# create function add_num(a int,b int)
+keyandconstrains-# returns int as $$
+keyandconstrains$# begin
+keyandconstrains$# return a+b;
+keyandconstrains$# end;
+keyandconstrains$# $$ language plpgsql;
+CREATE FUNCTION
+keyandconstrains=# select add_num(3,5);
+ add_num
+---------
+       8
+(1 row)
+
+
+
+keyandconstrains=# create function factorial (n int)
+keyandconstrains-# returns int as $$
+keyandconstrains$# declare result int := 1;
+keyandconstrains$# begin  if n < 0 then
+keyandconstrains$# raise exception 'Inpute can not be negative';
+keyandconstrains$# end if;
+keyandconstrains$# for i in 1..n loop
+keyandconstrains$# result := result * i;
+keyandconstrains$# end loop;
+keyandconstrains$# return result;
+keyandconstrains$# end;
+keyandconstrains$# $$
+keyandconstrains-# language plpgsql;
+CREATE FUNCTION
+keyandconstrains=# select factorial(5);
+ factorial
+-----------
+       120
+(1 row)
+
+keyandconstrains=# select factorial(-25);
+ERROR:  Inpute can not be negative
+
+
+keyandconstrains=# create function even_or_odd(n int)
+keyandconstrains-# returns text as $$
+keyandconstrains$# begin if n % 2 = 0 then
+keyandconstrains$# return 'Even';
+keyandconstrains$# else return 'Odd';
+keyandconstrains$# end if;
+keyandconstrains$# end;
+keyandconstrains$# $$
+keyandconstrains-# language plpgsql;
+CREATE FUNCTION
+keyandconstrains=# select even_or_odd(56);
+ even_or_odd
+-------------
+ Even
+(1 row)
+
+
+keyandconstrains=# select even_or_odd(5);
+ even_or_odd
+-------------
+ Odd
+(1 row)
+
+
+
+demofunction=# create or replace function greet(name varchar)
+demofunction-# returns varchar as $$
+demofunction$# begin
+demofunction$# return 'Hello, ' || name || '!';
+demofunction$# end;
+demofunction$# $$
+demofunction-# language plpgsql;
+CREATE FUNCTION
+demofunction=# select greet('Vishal');
+     greet
+----------------
+ Hello, Vishal!
+(1 row)
+
+
+demofunction=#  create or replace function getBooksByGenre(genre_name VARCHAR)
+demofunction-# returnss table(book_id int , title VARCHAR, author VARCHAR, publication_year int, genre VARCHAR) AS $$
+demofunction$# begin
+demofunction$#     return query
+demofunction$#     select b.book_id, b.title, b.author, b.publication_year, b.genre
+demofunction$#     from books b
+demofunction$#     where b.genre = genre_name;
+demofunction$# end
+demofunction$# $$ language plpgsql;
+CREATE FUNCTION
+
+demofunction=# select * FROM getBooksByGenre('Fiction');
+
+ book_id |         title         |       author        | publication_year |  genre
+---------+-----------------------+---------------------+------------------+---------
+       1 | To Kill a Mockingbird | Harper Lee          |             1960 | Fiction
+       4 | The Great Gatsby      | F. Scott Fitzgerald |             1925 | Fiction
+(2 rows)
+
+
+
+keyandconstrains=# create function factorial (n int)
+keyandconstrains-# returns int as $$
+keyandconstrains$# declare result int := 1;
+keyandconstrains$# begin  if n < 0 then
+keyandconstrains$# raise exception 'Inpute can not be negative';
+keyandconstrains$# end if;
+keyandconstrains$# for i in 1..n loop
+keyandconstrains$# result := result * i;
+keyandconstrains$# end loop;
+keyandconstrains$# return result;
+keyandconstrains$# end;
+keyandconstrains$# $$
+keyandconstrains-# language plpgsql;
+CREATE FUNCTION
+keyandconstrains=# select factorial(5);
+ factorial
+-----------
+       120
+(1 row)
+
